@@ -31,6 +31,7 @@ export default new Vuex.Store({
         .catch((exp) => console.log(`로그인 실패 : ${exp}`));
     },
     getAllManager(store) {
+      console.log("dddd");
       http
         .get(`/managerlog`)
         // 데이터 저장
@@ -38,6 +39,8 @@ export default new Vuex.Store({
           store.commit("saveTest", response.data);
         })
         .catch((exp) => console.log(`로그인 실패 : ${exp}`));
+      console.log("dasdasdddd");
+
     },
   },
 });

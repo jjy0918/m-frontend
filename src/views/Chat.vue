@@ -21,10 +21,12 @@ export default {
   },
   methods: {
     move() {
-      this.$router.push(`/main`);
+      this.$router.push(`/`);
     },
     maangerLog() {
+      console.log("???");
       this.$store.dispatch("getAllManager");
+      console.log("???");
     },
   },
   computed: {

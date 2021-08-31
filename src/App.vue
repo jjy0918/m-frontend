@@ -1,5 +1,5 @@
 <template>
-  <div id="app"><router-view /> // router-view 컴포넌트를 사용합니다.</div>
+  <div id="app"><router-view /></div>
 </template>
 
 <script>

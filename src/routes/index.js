@@ -8,7 +8,8 @@ Vue.use(VueRouter);
 import Main from "@/views/Main.vue";
 import Chat from "@/views/Chat.vue";
 import Content from "@/views/Content.vue";
-import Test from "@/views/test.vue";
+import User from "@/views/User.vue";
+import Login from "@/views/Login.vue";
 
 // 경로 단축을 안했다면 다음과 같이 상대 경로를 사용한다.
 //import Main from '../views/Main.vue'
@@ -19,27 +20,33 @@ export const router = new VueRouter({
   mode: "history", // default는 hash 모드이다. history 모드를 적용하지 않으면 localhost:8080/#/ 이렇게 표시된다.
   routes: [
     {
-      path: "/",
+      path: "/main",
       component: Main,
       name: "Main",
-      redirect: "/content",
       children: [
         {
-          path: "content",
+          path: "/manager/content",
           component: Content,
           name: "Content", // name을 적어주면 나중에 프로그래밍 방식의 라우터 전환이 편해진다.
         },
         {
-          path: "chat",
+          path: "/manager/chat",
           component: Chat,
           name: "Chat",
         },
         {
-          path: "test",
-          component: Test,
-          name: "Test",
+          path: "/user",
+          component: User,
+          name: "User",
         },
+
       ],
     },
+    {
+      path: "/",
+      component: Login,
+      name: "Login"
+    }
+
   ],
 });

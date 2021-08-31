@@ -3,6 +3,7 @@
     1
     <my-header></my-header>
     2
+
     <router-view></router-view>
     1
   </div>

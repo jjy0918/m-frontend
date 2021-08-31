@@ -2,6 +2,17 @@ import Vue from "vue";
 import store from "./store/index";
 import { router } from "@/routes/index.js";
 import App from "@/App.vue";
+import BootstrapVue from 'bootstrap-vue'
+import 'bootstrap/dist/css/bootstrap.min.css'
+import 'bootstrap-vue/dist/bootstrap-vue.css'
+
+import VueMaterial from 'vue-material'
+import 'vue-material/dist/vue-material.min.css'
+import 'vue-material/dist/theme/default.css'
+
+Vue.use(VueMaterial)
+
+Vue.use(BootstrapVue)
 
 Vue.config.productionTip = false;
 
