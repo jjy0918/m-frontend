@@ -1,11 +1,9 @@
 <template>
-  <div>
-    1
+  <div class="container">
     <my-header></my-header>
-    2
-
+    <br />
+    <br />
     <router-view></router-view>
-    1
   </div>
 </template>
 

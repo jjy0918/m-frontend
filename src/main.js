@@ -10,6 +10,13 @@ import VueMaterial from 'vue-material'
 import 'vue-material/dist/vue-material.min.css'
 import 'vue-material/dist/theme/default.css'
 
+import VueSession from 'vue-session'
+
+var sessionOptions = {
+  persist: true
+}
+Vue.use(VueSession, sessionOptions)
+
 Vue.use(VueMaterial)
 
 Vue.use(BootstrapVue)

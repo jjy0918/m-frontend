@@ -1,23 +1,38 @@
 <template>
   <div>
-    <hr />
-    <hr />
-    <h2>Header</h2>
-    <button @click="moveManager()">manager 이동</button>
-    <button @click="moveUser()">user 이동</button>
-    <hr />
-    <hr />
+    <h2 class="text-center">EPKOREA</h2>
+    <md-tabs class="md-transparent" md-alignment="fixed">
+      <md-tab
+        id="tab-page"
+        md-label="관리자 관리"
+        @click="moveManagerManagement()"
+      ></md-tab>
+      <md-tab
+        id="tab-home"
+        md-label="사업 관리"
+        @click="moveProductManagement()"
+      ></md-tab>
+      <md-tab id="tab-posts" md-label="홍보센터" @click="moveEmpty()"></md-tab>
+      <md-tab
+        id="tab-favorites"
+        md-label="채용 안내"
+        @click="moveEmpty()"
+      ></md-tab>
+    </md-tabs>
   </div>
 </template>
 
 <script>
 export default {
   methods: {
-    moveManager() {
-      this.$router.push(`/manager/content`);
+    moveManagerManagement() {
+      this.$router.push(`/manager/managermanagement`);
     },
-    moveUser() {
-      this.$router.push(`/user`);
+    moveProductManagement() {
+      this.$router.push(`/manager/productmanagement`);
+    },
+    moveEmpty() {
+      this.$router.push(`/manager/empty`);
     },
   },
 };

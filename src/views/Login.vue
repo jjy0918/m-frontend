@@ -9,7 +9,7 @@
     >
       <b-form-group id="to-do-input">
         <b-container fluid>
-          <b-row class="my-1">
+          <b-row class="my-1" v-if="loginUserId == null">
             <b-col>
               <md-field md-clearable>
                 <label>ID</label>
@@ -23,8 +23,8 @@
             </b-col>
 
             <b-col sm="10">
-              <md-radio v-model="radio" value="manager">Manger</md-radio>
-              <md-radio v-model="radio" value="user">User</md-radio>
+              <md-radio v-model="loginType" value="MANAGER">Manger</md-radio>
+              <md-radio v-model="loginType" value="USER">User</md-radio>
             </b-col>
             <b-col sm="2">
               <md-button class="md-raised md-primary" @click="login()"
@@ -32,14 +32,40 @@
               >
             </b-col>
           </b-row>
+
+          <b-row class="my-1" v-else>
+            <b-col>
+              <md-field>
+                <label>ID</label>
+                <md-input v-model="loginUserId.id" readonly></md-input>
+              </md-field>
+
+              <md-field>
+                <label>NAME</label>
+                <md-input v-model="loginUserId.name" readonly></md-input>
+              </md-field>
+
+              <md-field>
+                <label>ROLE</label>
+                <md-input v-model="loginUserId.role" readonly></md-input>
+              </md-field>
+            </b-col>
+
+            <b-col sm="10">
+              <md-radio v-model="loginType" value="MANAGER"
+                >Masdasdanger</md-radio
+              >
+              <md-radio v-model="loginType" value="USER">Usasder</md-radio>
+            </b-col>
+            <b-col sm="2">
+              <md-button class="md-raised md-primary" @click="logout()"
+                >로그아웃</md-button
+              >
+            </b-col>
+          </b-row>
         </b-container>
       </b-form-group>
     </b-card>
-    <md-dialog-alert
-      :md-active.sync="loginAlert"
-      :md-content="message"
-      md-confirm-text="확인"
-    />
   </div>
 </template>
 
@@ -47,22 +73,58 @@
 export default {
   data() {
     return {
-      radio: "manager",
+      loginType: "MANAGER",
       id: null,
       password: null,
-      loginAlert: false,
-      message: "",
+      loginUserId: null,
     };
   },
   methods: {
     login() {
       if (!this.id || !this.password) {
-        this.message = "아이디나 비밀번호가 입력되지 않았습니다.";
+        alert("아이디나 비밀번호가 입력되지 않았습니다.");
+        //userLogin
       } else {
-        this.message = "로그인 시도";
+        var userDto = {
+          id: this.id,
+          password: this.password,
+          type: this.loginType,
+        };
+        this.$store.dispatch("userLogin", userDto);
       }
       this.loginAlert = true;
     },
+    logout() {
+      this.$store.commit("logout");
+    },
+  },
+  computed: {
+    // 값 변경이 일어나면
+    newResultLocation() {
+      return this.$store.state.loginUserId;
+    },
+  },
+  watch: {
+    // 갱신
+    newResultLocation(newValue) {
+      this.loginUserId = newValue;
+      if (this.loginUserId != null) {
+        if (
+          this.loginUserId.role === "MANAGER" ||
+          this.loginUserId.role === "ADMIN"
+        ) {
+          this.$router.push(`/manager/managermanagement`);
+        } else if (this.loginUserId.role === "USER") {
+          this.$router.push(`/user`);
+        }
+      } else {
+        this.$router.push(`/`);
+      }
+    },
+  },
+  created() {
+    this.loginUserId = this.$store.state.loginUserId;
+    console.log(this.loginUserId);
   },
 };
 </script>
