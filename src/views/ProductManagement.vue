@@ -24,9 +24,7 @@ export default {
       this.$router.push(`/`);
     },
     maangerLog() {
-      console.log("???");
       this.$store.dispatch("getAllManager");
-      console.log("???");
     },
   },
   computed: {

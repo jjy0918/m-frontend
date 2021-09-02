@@ -15,7 +15,6 @@
                 <label>ID</label>
                 <md-input v-model="id"></md-input>
               </md-field>
-
               <md-field>
                 <label>Password</label>
                 <md-input v-model="password" type="password"></md-input>
