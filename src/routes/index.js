@@ -8,6 +8,8 @@ Vue.use(VueRouter);
 import Manager from "@/views/Manager.vue";
 import ProductManagement from "@/views/ProductManagement.vue";
 import ManagerManagement from "@/views/ManagerManagement.vue";
+import ManagerManagementList from "@/views/ManagerManagementList.vue";
+import ManagerLogList from "@/views/ManagerLogList.vue";
 import User from "@/views/User.vue";
 import Login from "@/views/Login.vue";
 import Empty from "@/views/Empty.vue";
@@ -30,6 +32,18 @@ export const router = new VueRouter({
           path: "/manager/managermanagement",
           component: ManagerManagement,
           name: "managermanagement", // name을 적어주면 나중에 프로그래밍 방식의 라우터 전환이 편해진다.
+          children: [
+            {
+              path: "/manager/managermanagerment/managerlist",
+              component: ManagerManagementList,
+              name: "managerlist"
+            },
+            {
+              path: "/manager/managermanagerment/managerlog",
+              component: ManagerLogList,
+              name: "managerlog"
+            },
+          ]
         },
         {
           path: "/manager/productmanagement",

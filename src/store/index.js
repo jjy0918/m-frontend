@@ -9,6 +9,7 @@ export default new Vuex.Store({
     test: {},
     loginUserId: null,
     allManager: null,
+    allManagerLog: null
   },
   mutations: {
     saveTest: (state, payload) => {
@@ -21,8 +22,18 @@ export default new Vuex.Store({
       state.loginUserId = null;
     },
     saveAllManager: (state, payload) => {
-      state.allManager = payload;
-    }
+
+      if (payload.data.length == 0) {
+        state.allManager = { data: [{ no: "검색 결과 없음" }] };
+      }
+      else {
+        state.allManager = payload;
+
+      }
+    },
+    saveAllManagerLog: (state, paylod) => {
+      state.allManagerLog = paylod;
+    },
   },
   actions: {
     userLogin(store, payload) {
@@ -48,5 +59,32 @@ export default new Vuex.Store({
         .catch((exp) => console.log(`항목 불러오기 실패 : ${exp}`));
 
     },
+    getAllManagerLog(store) {
+      http
+        .get(`/managerlog`)
+        // 데이터 저장
+        .then((response) => {
+          store.commit("saveAllManagerLog", response.data);
+          console.log(response.data);
+        })
+        .catch((exp) => console.log(`항목 불러오기 실패 : ${exp}`));
+
+    },
+    searchManager(store, payload) {
+      http
+        .get(`/manager/search/${payload.type}?word=${payload.word}&page=${payload.page}`)
+        .then((response) => {
+          store.commit("saveAllManager", response.data);
+        })
+        .catch((exp) => console.log(`매니저 검색 실패 : ${exp}`));
+    },
+    searchManagerLog(store, payload) {
+      http
+        .get(`/manager/search/${payload.type}?word=${payload.word}&page=${payload.page}`)
+        .then((response) => {
+          store.commit("saveAllManagerLog", response.data);
+        })
+        .catch((exp) => console.log(`매니저 검색 실패 : ${exp}`));
+    }
   },
 });

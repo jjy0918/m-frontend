@@ -12,6 +12,14 @@ import 'vue-material/dist/theme/default.css'
 
 import VueSession from 'vue-session'
 
+import { library } from '@fortawesome/fontawesome-svg-core'
+import { faUserSecret } from '@fortawesome/free-solid-svg-icons'
+import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
+
+library.add(faUserSecret)
+
+Vue.component('font-awesome-icon', FontAwesomeIcon)
+
 var sessionOptions = {
   persist: true
 }

@@ -1,11 +1,11 @@
 <template>
   <!-- <router-view></router-view> -->
-  <div class="row container">
+  <div class="row container" v-if="isAdmin">
     <div>
       <div class="md-display-1 text-center">{{ nowMenu }}</div>
       <hr />
     </div>
-    <div class="col-sm-2" v-if="isAdmin">
+    <div class="col-sm-2">
       <md-table>
         <md-table-row>
           <md-table-head md-numeric class="text-center"
@@ -28,33 +28,7 @@
         </md-table-row>
       </md-table>
     </div>
-    <div class="col-sm-10" v-if="isAdmin">
-      <md-table v-model="allManager.data" md-card>
-        <md-table-toolbar>
-          <div class="md-toolbar-section-start"></div>
-
-          <md-field md-clearable class="md-toolbar-section-end">
-            <md-input
-              placeholder="Search by name..."
-              v-model="search"
-              @input="searchOnTable"
-            />
-            <button>123</button>
-          </md-field>
-        </md-table-toolbar>
-        <md-table-row slot="md-table-row" slot-scope="{ item }">
-          <md-table-cell md-label="번호" md-numeric>{{
-            item.no
-          }}</md-table-cell>
-          <md-table-cell md-label="아이디">{{ item.id }}</md-table-cell>
-          <md-table-cell md-label="이름">{{ item.name }}</md-table-cell>
-          <md-table-cell md-label="소속">{{ item.belong }}</md-table-cell>
-          <md-table-cell md-label="등록일">{{
-            item.registrationDate
-          }}</md-table-cell>
-        </md-table-row>
-      </md-table>
-    </div>
+    <router-view />
   </div>
 </template>
 
@@ -65,25 +39,16 @@ export default {
       loginUserId: null,
       nowMenu: "관리자 등록/관리",
       isAdmin: false,
-      allManager: null,
-      searchOnTable: null,
-      search: null,
-      paginatedUsers: [],
     };
   },
   methods: {
     getAllManager() {
       this.nowMenu = "관리자 등록/관리";
-      this.$store.dispatch("getAllManager");
+      this.$router.push(`/manager/managermanagerment/managerlist`);
     },
     getAllManagerLog() {
       this.nowMenu = "관리자 로그";
-    },
-    defaultTable() {
-      this.allManager = { data: [{ id: "항목이 없습니다." }] };
-    },
-    updatePagination() {
-      console.log("???");
+      this.$router.push(`/manager/managermanagerment/managerlog`);
     },
   },
   created() {
@@ -97,20 +62,7 @@ export default {
     } else {
       this.isAdmin = true;
       this.getAllManager();
-      this.defaultTable();
     }
-  },
-  computed: {
-    // 값 변경이 일어나면
-    newAllManager() {
-      return this.$store.state.allManager;
-    },
-  },
-  watch: {
-    // 갱신
-    newAllManager(newValue) {
-      this.allManager = newValue;
-    },
   },
 };
 </script>
