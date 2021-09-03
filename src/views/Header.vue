@@ -26,10 +26,10 @@
 export default {
   methods: {
     moveManagerManagement() {
-      this.$router.push(`/manager/managermanagement`);
+      this.$router.push(`/manager/mm`);
     },
     moveProductManagement() {
-      this.$router.push(`/manager/productmanagement`);
+      this.$router.push(`/manager/bm`);
     },
     moveEmpty() {
       this.$router.push(`/manager/empty`);

@@ -6,13 +6,20 @@ Vue.use(VueRouter);
 
 // 만약 이전 글에서 alias 경로 단축을 설정했다면 다음과 같이 절대경로로 작성가능하다.
 import Manager from "@/views/Manager.vue";
-import ProductManagement from "@/views/ProductManagement.vue";
-import ManagerManagement from "@/views/ManagerManagement.vue";
-import ManagerManagementList from "@/views/ManagerManagementList.vue";
-import ManagerLogList from "@/views/ManagerLogList.vue";
+import ManagerManagement from "@/views/Manager/ManagerManagement.vue";
+import ManagerManagementList from "@/views/Manager/ManagerManagementList.vue";
+import ManagerLogList from "@/views/Manager/ManagerLogList.vue";
+import ManagerCreate from "@/views/Manager/ManagerCreate.vue";
+import ManageDetail from "@/views/Manager/ManageDetail.vue";
 import User from "@/views/User.vue";
 import Login from "@/views/Login.vue";
 import Empty from "@/views/Empty.vue";
+
+import BusinessManagement from "@/views/BusinessManagement/BusinessManagement.vue";
+import ProductManagement from "@/views/BusinessManagement/ProductManagement.vue";
+import ProductManagerCreate from "@/views/BusinessManagement/ProductManagerCreate.vue";
+import ProductManagerDetail from "@/views/BusinessManagement/ProductManagerDetail.vue";
+
 
 // 경로 단축을 안했다면 다음과 같이 상대 경로를 사용한다.
 //import Main from '../views/Main.vue'
@@ -26,29 +33,56 @@ export const router = new VueRouter({
       path: "/manager",
       component: Manager,
       name: "Manager",
-      redirect: "/manager/managermanagement",
+      redirect: "/manager/mm",
       children: [
         {
-          path: "/manager/managermanagement",
+          path: "/manager/mm",
           component: ManagerManagement,
           name: "managermanagement", // name을 적어주면 나중에 프로그래밍 방식의 라우터 전환이 편해진다.
           children: [
             {
-              path: "/manager/managermanagerment/managerlist",
+              path: "/manager/mm/ml",
               component: ManagerManagementList,
               name: "managerlist"
             },
             {
-              path: "/manager/managermanagerment/managerlog",
+              path: "/manager/mm/mlog",
               component: ManagerLogList,
               name: "managerlog"
             },
+            {
+              path: "/manager/mm/md/:no",
+              component: ManageDetail,
+              name: "managerdtail"
+            },
+            {
+              path: "/manager/mm/mc",
+              component: ManagerCreate,
+              name: "managercreate"
+            }
           ]
         },
         {
-          path: "/manager/productmanagement",
-          component: ProductManagement,
-          name: "productmanagement",
+          path: "/manager/bm",
+          component: BusinessManagement,
+          name: "businessManagement",
+          children: [
+            {
+              path: "/manager/bm/pm",
+              component: ProductManagement,
+              name: "productManagement"
+            },
+            {
+              path: "/manager/bm/pmc",
+              component: ProductManagerCreate,
+              name: "productManagerCreate"
+            },
+            {
+              path: "/manager/bm/pmd/:no",
+              component: ProductManagerDetail,
+              name: "productManagerDetail"
+            }
+          ]
         },
         {
           path: "/manager/empty",

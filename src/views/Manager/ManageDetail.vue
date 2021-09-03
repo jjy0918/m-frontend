@@ -2,7 +2,7 @@
   <div class="col-sm-10 container my-3" v-if="isAdmin">
     <md-card class="md-layout-item container">
       <md-card-header>
-        <div class="md-title">관리자 등록</div>
+        <div class="md-title">관리자 수정</div>
       </md-card-header>
       <md-field>
         <label>아이디</label>
@@ -103,10 +103,15 @@
       <br />
     </md-card>
     <div class="row container my-3">
-      <div class="text-center col-sm-10"></div>
+      <div class="col-sm-1 container">
+        <md-button class="md-accent" @click="deleteManaer()"
+          >삭제하기</md-button
+        >
+      </div>
+      <div class="text-center col-sm-9"></div>
       <div class="col-sm-1 container">
         <md-button class="md-primary" @click="createManaer()"
-          >등록하기</md-button
+          >수정하기</md-button
         >
       </div>
       <div class="col-sm-1 container">
@@ -133,6 +138,7 @@ export default {
       role: "MANAGER",
       hasMessages: true,
       permission: [],
+      no: 0,
     };
   },
   methods: {
@@ -142,6 +148,17 @@ export default {
       } else {
         this.hasMessages = false;
       }
+    },
+    clear() {
+      this.id = null;
+      this.name = null;
+      this.belong = null;
+      this.phoneNumber = null;
+      this.password = null;
+      this.passwordCheck = null;
+      this.role = "MANAGER";
+      this.hasMessages = true;
+      this.permission = [];
     },
     createManaer() {
       if (this.password != this.passwordCheck) {
@@ -205,12 +222,16 @@ export default {
           cmCooling: p[7],
           cmLighting: p[8],
           cmRailroad: p[9],
+          nowNo: this.no,
         };
-        this.$store.dispatch("createManager", newManager);
+        this.$store.dispatch("editManager", newManager);
       }
     },
     cancelManaer() {
       this.$router.push(`/manager/mm/ml`);
+    },
+    deleteManaer() {
+      this.$store.dispatch("deleteManager", this.no);
     },
   },
   created() {
@@ -223,6 +244,9 @@ export default {
       this.nowMenu = "ADMIN 권한이 필요합니다";
     } else {
       this.isAdmin = true;
+      this.no = this.$route.params.no;
+      this.$store.commit("clearManagerDetailInfo");
+      this.$store.dispatch("getManagerDetail", this.no);
     }
   },
   computed: {
@@ -236,6 +260,9 @@ export default {
     },
     goManagerList() {
       return this.$store.state.goManagerList;
+    },
+    newManagerDetail() {
+      return this.$store.state.managerDetail;
     },
   },
   watch: {
@@ -261,6 +288,57 @@ export default {
     },
     goManagerList() {
       this.cancelManaer();
+    },
+    newManagerDetail(newValue) {
+      this.clear();
+      this.id = newValue.id;
+      this.name = newValue.name;
+      this.belong = newValue.belong;
+      this.phoneNumber = newValue.phoneNumber;
+      this.permission = [];
+      if (newValue.pmUpsSts) {
+        this.permission.push("PM_UPS_STS");
+      }
+
+      if (newValue.pmEss) {
+        this.permission.push("PM_ESS");
+      }
+
+      if (newValue.pmCooling) {
+        this.permission.push("PM_COOLING");
+      }
+
+      if (newValue.pmLighting) {
+        this.permission.push("PM_LIGHTING");
+      }
+
+      if (newValue.pmRailroad) {
+        this.permission.push("PM_RAILROAD");
+      }
+
+      if (newValue.cmUpsSts) {
+        this.permission.push("CM_UPS_STS");
+      }
+
+      if (newValue.cmEss) {
+        this.permission.push("CM_ESS");
+      }
+
+      if (newValue.cmCooling) {
+        this.permission.push("CM_COOLING");
+      }
+
+      if (newValue.cmLighting) {
+        this.permission.push("CM_LIGHTING");
+      }
+
+      if (newValue.cmRailroad) {
+        this.permission.push("CM_RAILROAD");
+      }
+
+      if (newValue.role == "ADMIN") {
+        this.permission.push("ADMIN");
+      }
     },
   },
 };

@@ -112,7 +112,7 @@ export default {
           this.loginUserId.role === "MANAGER" ||
           this.loginUserId.role === "ADMIN"
         ) {
-          this.$router.push(`/manager/managermanagement`);
+          this.$router.push(`/manager/mm`);
         } else if (this.loginUserId.role === "USER") {
           this.$router.push(`/user`);
         }

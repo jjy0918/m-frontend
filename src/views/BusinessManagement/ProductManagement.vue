@@ -11,7 +11,7 @@
               id="managerType"
               md-dense
             >
-              <md-option value="id">아이디</md-option>
+              <md-option value="name">제품명</md-option>
             </md-select>
           </md-field>
         </div>
@@ -22,35 +22,40 @@
         </md-field>
 
         <div class="md-toolbar-section-end">
-          <md-button class="md-icon-button" @click="clickSearchManagerLog(1)">
+          <md-button class="md-icon-button" @click="clickSearchManager(1)">
             <md-icon>search</md-icon>
           </md-button>
         </div>
       </div>
     </md-toolbar>
-    <md-table md-card>
+    <md-table v-model="productManager.data" md-card>
       <md-table-row>
         <md-table-head md-numeric>번호</md-table-head>
-        <md-table-head>로그인 일자</md-table-head>
-        <md-table-head>계정</md-table-head>
-        <md-table-head>IP</md-table-head>
-        <md-table-head>세션 ID</md-table-head>
-        <md-table-head>로그인 성공</md-table-head>
+        <md-table-head>제품 카테고리</md-table-head>
+        <md-table-head>제품명</md-table-head>
+        <md-table-head>카달로그</md-table-head>
+        <md-table-head>등록일</md-table-head>
+        <md-table-head>노출여부</md-table-head>
       </md-table-row>
 
-      <md-table-row v-for="(item, index) in allManagerLog.data" :key="index">
-        <md-table-cell md-numeric>{{ item.no }}</md-table-cell>
-        <md-table-cell>{{ item.loginDate }}</md-table-cell>
+      <md-table-row v-for="(item, index) in productManager.data" :key="index">
+        <md-table-cell md-numeric class="hover"
+          ><span @click="managerDetail(item.no)">{{
+            item.no
+          }}</span></md-table-cell
+        >
+        <md-table-cell>{{ item.category }}</md-table-cell>
 
-        <md-table-cell>{{ item.id }}</md-table-cell>
-        <md-table-cell>{{ item.ip }}</md-table-cell>
-        <md-table-cell>{{ item.sessionId }}</md-table-cell>
-        <md-table-cell>{{
-          ChangeSuccessLogin(item.successLogin)
-        }}</md-table-cell>
+        <md-table-cell>{{ item.name }}</md-table-cell>
+        <md-table-cell
+          ><a :href="item.catalog"><i class="far fa-file-pdf fa-2x"></i></a
+        ></md-table-cell>
+        <md-table-cell>{{ item.registrationDate }}</md-table-cell>
+        <md-table-cell>{{ ChangeSuccessLogin(item.expose) }}</md-table-cell>
       </md-table-row>
     </md-table>
-    <div class="text-center" v-if="allManagerLog.data.length === 0">
+
+    <div class="text-center" v-if="productManager.data.length === 0">
       <br />
       <br />
       <md-progress-spinner
@@ -62,31 +67,39 @@
       <br />
     </div>
 
-    <div class="text-center">
-      <md-button class="md-primary" @click="changeNum(1)"
-        ><i class="fas fa-angle-double-left"></i
-      ></md-button>
-      <md-button class="md-primary" @click="changeNum(selectedNumber - 1)"
-        ><i class="fas fa-arrow-left"></i
-      ></md-button>
-      <md-button
-        class="md-primary"
-        v-for="(item, index) in btn"
-        :key="index"
-        v-bind:class="{
-          'md-raised': item.selected,
-        }"
-        @click="changeNum(item.number)"
-        >{{ item.number }}</md-button
-      >
-      <md-button class="md-primary" @click="changeNum(selectedNumber + 1)"
-        ><i class="fas fa-arrow-right"></i
-      ></md-button>
-      <md-button
-        class="md-primary"
-        @click="changeNum(allManagerLog.pageInfo.totalPages)"
-        ><i class="fas fa-angle-double-right"></i
-      ></md-button>
+    <div class="row container">
+      <div class="col-sm-1"></div>
+      <div class="text-center col-sm-10">
+        <md-button class="md-primary" @click="changeNum(1)"
+          ><i class="fas fa-angle-double-left"></i
+        ></md-button>
+        <md-button class="md-primary" @click="changeNum(selectedNumber - 1)"
+          ><i class="fas fa-arrow-left"></i
+        ></md-button>
+        <md-button
+          class="md-primary"
+          v-for="(item, index) in btn"
+          :key="index"
+          v-bind:class="{
+            'md-raised': item.selected,
+          }"
+          @click="changeNum(item.number)"
+          >{{ item.number }}</md-button
+        >
+        <md-button class="md-primary" @click="changeNum(selectedNumber + 1)"
+          ><i class="fas fa-arrow-right"></i
+        ></md-button>
+        <md-button
+          class="md-primary"
+          @click="changeNum(productManager.pageInfo.totalPages)"
+          ><i class="fas fa-angle-double-right"></i
+        ></md-button>
+      </div>
+      <div class="col-sm-1 container">
+        <md-button class="md-primary" @click="createManaer()"
+          >신규등록</md-button
+        >
+      </div>
     </div>
   </div>
 </template>
@@ -97,7 +110,7 @@ export default {
     return {
       loginUserId: null,
       isAdmin: false,
-      allManagerLog: { data: [] },
+      productManager: { data: [] },
       managerType: null,
       searchWord: null,
       btn: [],
@@ -107,49 +120,52 @@ export default {
     };
   },
   methods: {
-    getAllManagerLog(getPage) {
-      this.$store.dispatch("getAllManagerLog", getPage);
+    getAllManager(getPage) {
+      this.$store.dispatch("getAllProductManager", getPage);
       this.searchWord = null;
       this.managerType = null;
       this.isSearch = false;
       this.selectedNumber = getPage;
     },
-    clickSearchManagerLog(getPage) {
+    clickSearchManager(getPage) {
       this.searchWordFix = this.searchWord;
       this.searchManager(getPage);
     },
     searchManager(getPage) {
-      if (!this.searchWordFix) {
+      if (!this.searchWord) {
         alert("검색어를 입력해주세요");
       } else if (!this.managerType) {
         alert("검색 필터를 선택해주세요");
       } else {
         this.selectedNumber = getPage;
         this.isSearch = true;
-        this.$store.dispatch("searchManagerLog", {
+        this.$store.dispatch("searchProductManager", {
           type: this.managerType,
           word: this.searchWordFix,
           page: getPage,
         });
       }
     },
-    ChangeSuccessLogin(successLogin) {
-      if (successLogin) {
-        return "Y";
-      } else {
-        return "N";
-      }
-    },
     changeNum(nextNum) {
-      if (nextNum < 1 || nextNum > this.allManagerLog.pageInfo.totalPages) {
+      if (nextNum < 1 || nextNum > this.productManager.pageInfo.totalPages) {
         return;
       }
       if (nextNum != this.selectedNumber) {
         if (this.isSearch) {
           this.searchManager(nextNum);
         } else {
-          this.getAllManagerLog(nextNum);
+          this.getAllManager(nextNum);
         }
+      }
+    },
+    managerDetail(no) {
+      this.$router.push(`/manager/bm/pmd/${no}`);
+    },
+    ChangeSuccessLogin(successLogin) {
+      if (successLogin) {
+        return "Y";
+      } else {
+        return "N";
       }
     },
     pagiNation(pages) {
@@ -189,34 +205,43 @@ export default {
         });
       }
     },
+    createManaer() {
+      this.$router.push(`/manager/bm/pmc`);
+    },
   },
   created() {
     this.loginUserId = this.$store.state.loginUserId;
     if (this.loginUserId === null) {
       alert("로그인이 필요한 서비스입니다.");
       this.$router.push(`/`);
-    } else if (this.loginUserId.role != "ADMIN") {
+    } else if (
+      this.loginUserId.role != "ADMIN" &&
+      this.loginUserId.role != "MANAGER"
+    ) {
       alert("권한이 없습니다.");
-      this.nowMenu = "ADMIN 권한이 필요합니다";
+      this.nowMenu = "ADMIN or MANAGER 권한이 필요합니다";
     } else {
       this.isAdmin = true;
-      this.getAllManagerLog(1);
+      this.getAllManager(1);
     }
   },
   computed: {
-    newAllManagerLog() {
-      return this.$store.state.allManagerLog;
+    newAllManager() {
+      return this.$store.state.productManager;
     },
   },
   watch: {
     // 갱신
-    newAllManagerLog(newValue) {
-      this.allManagerLog = newValue;
-      this.pagiNation(this.allManagerLog.pageInfo);
+    newAllManager(newValue) {
+      this.productManager = newValue;
+      this.pagiNation(this.productManager.pageInfo);
     },
   },
 };
 </script>
 
 <style>
+.hover {
+  cursor: pointer;
+}
 </style>

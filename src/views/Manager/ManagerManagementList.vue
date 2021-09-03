@@ -31,7 +31,12 @@
       </div>
     </md-toolbar>
     <md-table v-model="allManager.data" md-card>
-      <md-table-row slot="md-table-row" slot-scope="{ item }">
+      <md-table-row
+        slot="md-table-row"
+        slot-scope="{ item }"
+        @click="managerDetail(item.no)"
+        class="hover"
+      >
         <md-table-cell md-label="번호" md-numeric>{{ item.no }}</md-table-cell>
         <md-table-cell md-label="아이디">{{ item.id }}</md-table-cell>
         <md-table-cell md-label="이름">{{ item.name }}</md-table-cell>
@@ -145,7 +150,10 @@ export default {
         }
       }
     },
-    pageNation(pages) {
+    managerDetail(no) {
+      this.$router.push(`/manager/mm/md/${no}`);
+    },
+    pagiNation(pages) {
       if (pages.pageNumber == 1) {
         this.btn = [{ number: 1, selected: true }];
         for (let i = 2; i <= 3 && i <= pages.totalPages; i++) {
@@ -183,7 +191,7 @@ export default {
       }
     },
     createManaer() {
-      this.$router.push(`/manager/managermanagerment/managercreate`);
+      this.$router.push(`/manager/mm/mc`);
     },
   },
   created() {
@@ -208,11 +216,14 @@ export default {
     // 갱신
     newAllManager(newValue) {
       this.allManager = newValue;
-      this.pageNation(this.allManager.pageInfo);
+      this.pagiNation(this.allManager.pageInfo);
     },
   },
 };
 </script>
 
 <style>
+.hover {
+  cursor: pointer;
+}
 </style>
