@@ -19,6 +19,9 @@ import BusinessManagement from "@/views/BusinessManagement/BusinessManagement.vu
 import ProductManagement from "@/views/BusinessManagement/ProductManagement.vue";
 import ProductManagerCreate from "@/views/BusinessManagement/ProductManagerCreate.vue";
 import ProductManagerDetail from "@/views/BusinessManagement/ProductManagerDetail.vue";
+import ConstructionManagement from "@/views/BusinessManagement/ConstructionManagement.vue";
+import ConstructionManagerCreate from "@/views/BusinessManagement/ConstructionManagerCreate.vue";
+import ConstructionManagerDetail from "@/views/BusinessManagement/ConstructionManagerDetail.vue";
 
 
 // 경로 단축을 안했다면 다음과 같이 상대 경로를 사용한다.
@@ -81,6 +84,22 @@ export const router = new VueRouter({
               path: "/manager/bm/pmd/:no",
               component: ProductManagerDetail,
               name: "productManagerDetail"
+            },
+            {
+              path: "/manager/bm/cm",
+              component: ConstructionManagement,
+              name: "constructionManagement"
+            },
+            {
+              path: "/manager/bm/cmc",
+              component: ConstructionManagerCreate,
+              name: "constructionManagerCreate"
+            }
+            ,
+            {
+              path: "/manager/bm/cmd/:no",
+              component: ConstructionManagerDetail,
+              name: "constructionManagerDetail"
             }
           ]
         },

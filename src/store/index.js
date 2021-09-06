@@ -14,7 +14,10 @@ export default new Vuex.Store({
     managerDetail: null,
     productManager: null,
     pImage: null,
-    pPdf: null
+    pPdf: null,
+    constructionManager: null,
+    detailImage: null,
+    bannerImage: null
   },
   mutations: {
     saveTest: (state, payload) => {
@@ -76,7 +79,94 @@ export default new Vuex.Store({
     },
     clearPPdf: (state) => {
       state.pPdf = null;
+    },
+    addDetailImage: (state) => {
+      if (!state.detailImage) {
+        state.detailImage = [null];
+      } else if (state.detailImage.length > 10) {
+        alert("추가할 수 없습니다.");
+      } else {
+        state.detailImage.push(null);
+      }
+      console.log(state.detailImage);
+    },
+    deleteDtailImage: (state) => {
+      if (!state.detailImage || state.detailImage.length <= 0) {
+        return;
+      } else {
+        state.detailImage.pop();
+      }
+    },
+    deleteDetailImageByIndex: (state, index) => {
+      state.detailImage.splice(index, 1);
+    },
+    deleteBannerImageByIndex: (state, index) => {
+      state.bannerImage.splice(index, 1);
+    },
+    saveDetailImage: (state, payload) => {
+      if (!state.detailImage) {
+        state.detailImage = [];
+      }
+      state.detailImage[payload.index] = payload.data.data;
+      console.log(state.detailImage);
+    },
+    clearDetailImage: (state, index) => {
+      state.detailImage[index] = null;
+    },
+    clearDetailImageAll: (state) => {
+      state.detailImage = null;
+    },
+    saveConstructionManager: (state, payload) => {
+      if (payload.data.length == 0) {
+        state.constructionManager = { data: [{ no: "검색 결과 없음" }] };
+      }
+      else {
+        state.constructionManager = payload;
+
+      }
+    },
+    saveBannerImage: (state, payload) => {
+      if (!state.bannerImage) {
+        state.bannerImage = [];
+      }
+      state.bannerImage[payload.index] = payload.data.data;
+    },
+    clearBannerImage: (state, index) => {
+      state.bannerImage[index] = null;
+    },
+    clearBannerImageAll: (state) => {
+      state.bannerImage = null;
+    },
+    addBannerImage: (state) => {
+      if (!state.bannerImage) {
+        state.bannerImage = [null];
+      } else if (state.bannerImage.length > 30) {
+        alert("추가할 수 없습니다.");
+      } else {
+        state.bannerImage.push(null);
+      }
+    },
+    deleteBannerImage: (state) => {
+      if (!state.bannerImage || state.bannerImage.length <= 0) {
+        return;
+      } else {
+        state.bannerImage.pop();
+      }
+    },
+    setConstructionDetail: (state, payload) => {
+      state.detailImage = [];
+      for (let i in payload.detailimage) {
+        state.detailImage.push(payload.detailimage[i].image);
+      }
+
+      state.bannerImage = [];
+      for (let i in payload.banners) {
+        state.bannerImage.push(payload.banners[i].image);
+      }
+
+      state.pImage = payload.thumbnail;
     }
+
   },
   actions: {
     userLogin(store, payload) {
@@ -271,6 +361,81 @@ export default new Vuex.Store({
           console.log(exp);
           alert("삭제에 실패했습니다.");
 
+        })
+    },
+    getAllConstructionManager(store, payload) {
+      http
+        .get(`/construction?page=${payload}`)
+        // 데이터 저장
+        .then((response) => {
+          store.commit("saveConstructionManager", response.data);
+        })
+        .catch((exp) => console.log(`항목 불러오기 실패 : ${exp}`));
+
+    },
+    searchConstructionManager(store, payload) {
+      http
+        .get(`/construction/search/name?word=${payload.word}&page=${payload.page}`)
+        .then((response) => {
+          store.commit("saveConstructionManager", response.data);
+        })
+        .catch((exp) => console.log(`항목 검색 실패 : ${exp}`));
+    },
+    saveDetailImage(store, payload) {
+      http
+        .post(`/save`, payload.data, {
+          headers: {
+            'Content-Type': "multipart/form-data"
+          }
+        })
+        .then((response) => {
+          let rp = {
+            data: response.data,
+            index: payload.index
+          }
+          store.commit("saveDetailImage", rp);
+        })
+        .catch((exp) => console.log(`이미지 등록 실패 : ${exp}`));
+    },
+    saveBannerImage(store, payload) {
+      http
+        .post(`/save`, payload.data, {
+          headers: {
+            'Content-Type': "multipart/form-data"
+          }
+        })
+        .then((response) => {
+          let rp = {
+            data: response.data,
+            index: payload.index
+          }
+          store.commit("saveBannerImage", rp);
+        })
+        .catch((exp) => console.log(`이미지 등록 실패 : ${exp}`));
+    },
+    createConstruction(store, payload) {
+      http
+        .post(`/construction`, payload)
+        .then(() => {
+          alert("정상적으로 등록되었습니다.");
+          store.commit("goManagerList");
+
+        })
+        .catch((exp) => {
+          console.log(exp);
+          alert("등록에 실패했습니다.");
+
+        })
+    },
+    getConstructionManagerDetail(store, no) {
+      http
+        .get(`/construction/${no}`)
+        .then((response) => {
+          store.commit("clearManagerDetailInfo");
+          store.commit("managerDetailInfo", response.data);
+        })
+        .catch((e) => {
+          console.log(e);
         })
     }
   },

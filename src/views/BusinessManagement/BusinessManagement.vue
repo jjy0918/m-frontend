@@ -46,7 +46,7 @@ export default {
     },
     getConstruction() {
       this.nowMenu = "구축사례 관리";
-      // this.$router.push(`/manager/bm/mlog`);
+      this.$router.push(`/manager/bm/cm`);
     },
   },
   created() {

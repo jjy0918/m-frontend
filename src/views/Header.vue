@@ -1,6 +1,9 @@
 <template>
   <div>
+    <br />
+    <br />
     <h2 class="text-center">EPKOREA</h2>
+    <br />
     <md-tabs class="md-transparent" md-alignment="fixed">
       <md-tab
         id="tab-page"
