@@ -104,9 +104,7 @@
       </div>
       <div class="text-center col-sm-9"></div>
       <div class="col-sm-1 container">
-        <md-button class="md-primary" @click="createManaer()"
-          >수정하기</md-button
-        >
+        <md-button class="md-primary" @click="editManaer()">수정하기</md-button>
       </div>
       <div class="col-sm-1 container">
         <md-button class="md-Accent" @click="cancelManaer()"
@@ -165,7 +163,7 @@ export default {
   },
   methods: {
     // 수정 적용
-    createManaer() {
+    editManaer() {
       if (!this.name) {
         alert("제품명을 입력하지 않았습니다.");
       } else {
@@ -186,7 +184,11 @@ export default {
           editor: this.editor,
           category: this.categoryToNum[this.parent][this.child],
         };
-        this.$store.dispatch("createProduct", product);
+        let payload = {
+          data: product,
+          no: this.no,
+        };
+        this.$store.dispatch("editProduct", payload);
       }
     },
     cancelManaer() {
@@ -223,6 +225,9 @@ export default {
       } else {
         this.table.pop();
       }
+    },
+    deleteManaer() {
+      this.$store.dispatch("deleteManaer", this.no);
     },
   },
   created() {

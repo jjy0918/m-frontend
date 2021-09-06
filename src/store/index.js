@@ -245,6 +245,33 @@ export default new Vuex.Store({
           console.log(e);
         })
     },
+    editProduct(store, payload) {
+      http
+        .put(`/productmanagement/${payload.no}`, payload.data)
+        .then(() => {
+          alert("정상적으로 수정되었습니다.");
+          store.commit("goManagerList");
 
+        })
+        .catch((exp) => {
+          console.log(exp);
+          alert("수정에 실패했습니다.");
+
+        })
+    },
+    deleteManaer(store, payload) {
+      http
+        .delete(`/productmanagement/${payload}`)
+        .then(() => {
+          alert("정상적으로 삭제되었습니다.");
+          store.commit("goManagerList");
+
+        })
+        .catch((exp) => {
+          console.log(exp);
+          alert("삭제에 실패했습니다.");
+
+        })
+    }
   },
 });
