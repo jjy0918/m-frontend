@@ -118,6 +118,10 @@ export const router = new VueRouter({
     },
     {
       path: "/",
+      redirect: "/login"
+    },
+    {
+      path: "/login",
       component: Login,
       name: "Login"
     }

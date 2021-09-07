@@ -147,10 +147,15 @@
       <br />
     </md-card>
     <div class="row container my-3">
-      <div class="text-center col-sm-10"></div>
+      <div class="col-sm-1 container">
+        <md-button class="md-accent" @click="deleteManaer()"
+          >삭제하기</md-button
+        >
+      </div>
+      <div class="text-center col-sm-9"></div>
       <div class="col-sm-1 container">
         <md-button class="md-primary" @click="createManaer()"
-          >등록하기</md-button
+          >수정하기</md-button
         >
       </div>
       <div class="col-sm-1 container">
@@ -225,10 +230,10 @@ export default {
           }
           newTableList.push(this.table[i]);
         }
+
         let newDetailImageList = [];
         this.detailImageLink = this.$store.state.detailImage;
         console.log(this.detailImageLink);
-
         for (let i in this.detailImage) {
           if (!this.detailImageLink[i]) {
             alert("상세 이미지 내용이 입력되지 않았습니다.");
@@ -236,7 +241,6 @@ export default {
           }
           newDetailImageList.push(this.detailImageLink[i].image);
         }
-
         let newBannerImageList = [];
         this.bannerImageLink = this.$store.state.bannerImage;
 
@@ -262,11 +266,19 @@ export default {
           banner: newBannerImageList,
         };
 
-        this.$store.dispatch("createConstruction", product);
+        let data = {
+          no: this.no,
+          data: product,
+        };
+        console.log(data);
+        // this.$store.dispatch("editConstruction", data);
       }
     },
     cancelManaer() {
       this.$router.push(`/manager/bm/cm`);
+    },
+    deleteManaer() {
+      this.$store.dispatch("deleteConstruction", this.no);
     },
     onImageUpload(evt) {
       if (evt[0]) {
@@ -343,8 +355,13 @@ export default {
       } else if (this.bannerImage.length > 30) {
         alert("추가할 수 없습니다.");
       } else {
+        console.log("==========================");
+
+        console.log(this.bannerImage);
         this.bannerImage.push({ name: null, image: null });
         this.$store.commit("addBannerImage");
+        console.log(this.bannerImage);
+        console.log("==========================");
       }
     },
     deleteBannerImage() {
@@ -439,12 +456,15 @@ export default {
       this.child = newValue.categoryDetail.child;
       this.table = newValue.tableList;
       this.image = newValue.thumbnail;
-      this.bannerImage = newValue.banners;
-      this.detailImage = [];
-      for (let i in newValue.detailimage) {
-        this.detailImage.push(newValue.detailimage[i].image);
+      if (newValue.banners.length != 0) {
+        this.bannerImage = newValue.banners;
       }
-      console.log(newValue.detailimage);
+      if (newValue.detailimage.length != 0) {
+        this.detailImage = [];
+        for (let i in newValue.detailimage) {
+          this.detailImage.push(newValue.detailimage[i].image);
+        }
+      }
     },
   },
 };

@@ -67,6 +67,15 @@ export default new Vuex.Store({
     },
     managerDetailInfo: (state, payload) => {
       state.managerDetail = payload.data;
+      if (payload.data.banners.length != 0) {
+        state.bannerImage = payload.data.banners;
+
+      }
+      if (payload.data.detailimage.length != 0) {
+        state.detailImage = payload.data.detailimage;
+
+      }
+
     },
     savePImage: (state, payload) => {
       state.pImage = payload.data;
@@ -437,6 +446,34 @@ export default new Vuex.Store({
         .catch((e) => {
           console.log(e);
         })
-    }
+    },
+    deleteConstruction(store, no) {
+      http
+        .delete(`/construction/${no}`)
+        .then(() => {
+          alert("정상적으로 삭제되었습니다.");
+          store.commit("goManagerList");
+
+        })
+        .catch((exp) => {
+          console.log(exp);
+          alert("삭제에 실패했습니다.");
+
+        })
+    },
+    editConstruction(store, payload) {
+      http
+        .put(`/construction/${payload.no}`, payload.data)
+        .then(() => {
+          alert("정상적으로 수정되었습니다.");
+          store.commit("goManagerList");
+
+        })
+        .catch((exp) => {
+          console.log(exp);
+          alert("등록에 실패했습니다.");
+
+        })
+    },
   },
 });
