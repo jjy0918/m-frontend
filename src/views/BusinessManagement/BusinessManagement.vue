@@ -42,11 +42,19 @@ export default {
   methods: {
     getProductManagement() {
       this.nowMenu = "제품 관리";
-      this.$router.push(`/manager/bm/pm`);
+      this.$store.commit("reloadFalse");
+
+      this.$router.push(`/manager/bm/pm`).catch(() => {
+        this.$store.commit("reloadTrue");
+      });
     },
     getConstruction() {
       this.nowMenu = "구축사례 관리";
-      this.$router.push(`/manager/bm/cm`);
+      this.$store.commit("reloadFalse");
+
+      this.$router.push(`/manager/bm/cm`).catch(() => {
+        this.$store.commit("reloadTrue");
+      });
     },
   },
   created() {

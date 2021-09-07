@@ -207,12 +207,21 @@ export default {
     newAllManagerLog() {
       return this.$store.state.allManagerLog;
     },
+    newReload() {
+      return this.$store.state.reload;
+    },
   },
   watch: {
     // 갱신
     newAllManagerLog(newValue) {
       this.allManagerLog = newValue;
       this.pagiNation(this.allManagerLog.pageInfo);
+    },
+    newReload(newValue) {
+      if (newValue) {
+        this.getAllManagerLog(1);
+        this.$store.commit("reloadFalse");
+      }
     },
   },
 };

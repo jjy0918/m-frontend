@@ -44,11 +44,21 @@ export default {
   methods: {
     getAllManager() {
       this.nowMenu = "관리자 등록/관리";
-      this.$router.push(`/manager/mm/ml`);
+      // this.$router.push(`/manager/mm/ml`);
+      this.$store.commit("reloadFalse");
+
+      this.$router.push(`/manager/mm/ml`).catch(() => {
+        this.$store.commit("reloadTrue");
+      });
     },
     getAllManagerLog() {
       this.nowMenu = "관리자 로그";
-      this.$router.push(`/manager/mm/mlog`);
+      // this.$router.push(`/manager/mm/mlog`);
+      this.$store.commit("reloadFalse");
+
+      this.$router.push(`/manager/mm/mlog`).catch(() => {
+        this.$store.commit("reloadTrue");
+      });
     },
   },
   created() {

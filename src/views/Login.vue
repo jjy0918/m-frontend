@@ -112,6 +112,8 @@ export default {
           this.loginUserId.role === "MANAGER" ||
           this.loginUserId.role === "ADMIN"
         ) {
+          this.$session.set("user_id", this.loginUserId);
+
           this.$router.push(`/manager/mm`);
         } else if (this.loginUserId.role === "USER") {
           this.$router.push(`/user`);
@@ -122,7 +124,12 @@ export default {
     },
   },
   created() {
-    this.loginUserId = this.$store.state.loginUserId;
+    // this.loginUserId = this.$store.state.loginUserId;
+    // this.loginUserId = this.$session.get("user_id");
+    // if(this.loginUserId!=null){
+    //       this.$router.push(`/manager/mm`);
+
+    // }
     console.log(this.loginUserId);
   },
 };

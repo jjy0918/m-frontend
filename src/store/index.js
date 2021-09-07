@@ -17,11 +17,18 @@ export default new Vuex.Store({
     pPdf: null,
     constructionManager: null,
     detailImage: null,
-    bannerImage: null
+    bannerImage: null,
+    reload: false
   },
   mutations: {
     saveTest: (state, payload) => {
       state.test = payload.data.managerLogList;
+    },
+    reloadFalse: (state) => {
+      state.reload = false;
+    },
+    reloadTrue: (state) => {
+      state.reload = true;
     },
     saveLoginUser: (state, payload) => {
       state.loginUserId = payload;

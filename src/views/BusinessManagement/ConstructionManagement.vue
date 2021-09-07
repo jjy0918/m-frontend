@@ -231,12 +231,21 @@ export default {
     newAllManager() {
       return this.$store.state.constructionManager;
     },
+    newReload() {
+      return this.$store.state.reload;
+    },
   },
   watch: {
     // 갱신
     newAllManager(newValue) {
       this.constructionManager = newValue;
       this.pagiNation(this.constructionManager.pageInfo);
+    },
+    newReload(newValue) {
+      if (newValue) {
+        this.getAllConstruction(1);
+        this.$store.commit("reloadFalse");
+      }
     },
   },
 };

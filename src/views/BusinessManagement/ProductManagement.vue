@@ -229,12 +229,21 @@ export default {
     newAllManager() {
       return this.$store.state.productManager;
     },
+    newReload() {
+      return this.$store.state.reload;
+    },
   },
   watch: {
     // 갱신
     newAllManager(newValue) {
       this.productManager = newValue;
       this.pagiNation(this.productManager.pageInfo);
+    },
+    newReload(newValue) {
+      if (newValue) {
+        this.getAllManager(1);
+        this.$store.commit("reloadFalse");
+      }
     },
   },
 };
