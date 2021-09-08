@@ -25,15 +25,15 @@
         <md-input v-model="phoneNumber"></md-input>
       </md-field>
 
-      <md-field>
+      <!-- <md-field>
         <label>비밀번호</label>
         <md-input v-model="password" required type="password"></md-input>
         <span class="md-helper-text"
           >영문/숫자 조합 8자리 이상, 12자리 이하</span
         >
-      </md-field>
+      </md-field> -->
 
-      <md-field :class="messageClass">
+      <!-- <md-field :class="messageClass">
         <label>비밀번호(확인)</label>
         <md-input
           v-model="passwordCheck"
@@ -42,7 +42,7 @@
           @keyup="ConfirmPassword"
         ></md-input>
         <span class="md-error">비밀번호가 일치하지 않습니다.</span>
-      </md-field>
+      </md-field> -->
 
       <div>
         <md-radio v-model="role" value="ADMIN">마스터관리자</md-radio>
@@ -161,9 +161,7 @@ export default {
       this.permission = [];
     },
     createManaer() {
-      if (this.password != this.passwordCheck) {
-        alert("비밀번호가 일치하지 않습니다.");
-      } else if (!this.id || !this.name || !this.password) {
+      if (!this.id || !this.name) {
         alert("필수 항목이 입력되지 않았습니다.");
       } else {
         let p = [
@@ -210,7 +208,7 @@ export default {
           name: this.name,
           belong: this.belong,
           phoneNumber: this.phoneNumber,
-          password: this.password,
+          // password: this.password,
           role: newRole,
           pmUpsSts: p[0],
           pmEss: p[1],

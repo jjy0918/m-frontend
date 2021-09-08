@@ -154,6 +154,8 @@ export default new Vuex.Store({
       state.bannerImage = null;
     },
     addBannerImage: (state) => {
+      console.log("state==========");
+      console.log(state.bannerImage);
       if (!state.bannerImage) {
         state.bannerImage = [null];
       } else if (state.bannerImage.length > 30) {
@@ -161,6 +163,7 @@ export default new Vuex.Store({
       } else {
         state.bannerImage.push(null);
       }
+      console.log("1212 : " + state.bannerImage.length)
     },
     deleteBannerImage: (state) => {
       if (!state.bannerImage || state.bannerImage.length <= 0) {
@@ -198,6 +201,25 @@ export default new Vuex.Store({
           console.log(exp);
         });
     },
+    // userLogin(store, payload) {
+    //   let frm = new FormData();
+    //   console.log("===========================");
+    //   console.log(payload);
+    //   frm.append('username', payload.id);
+    //   frm.append('password', payload.password);
+    //   http
+    //     .post(`/login`, frm)
+    //     // 데이터 저장
+    //     .then(function (response) {
+    //       console.log(response);
+    //       alert(response.data.data.name + "님 환영합니다");
+    //       store.commit("saveLoginUser", response.data.data);
+    //     })
+    //     .catch((exp) => {
+    //       alert("아이디 혹은 비밀번호를 확인해주세요");
+    //       console.log(exp);
+    //     });
+    // },
     getAllManager(store, payload) {
 
       http

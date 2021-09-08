@@ -270,8 +270,8 @@ export default {
           no: this.no,
           data: product,
         };
-        console.log(data);
-        // this.$store.dispatch("editConstruction", data);
+        // console.log(data);
+        this.$store.dispatch("editConstruction", data);
       }
     },
     cancelManaer() {
@@ -349,19 +349,16 @@ export default {
       }
     },
     addBannerImage() {
+      console.log(this.bannerImage);
+
       if (!this.bannerImage) {
         this.bannerImage = [{ name: null, image: null }];
         this.$store.commit("addBannerImage");
       } else if (this.bannerImage.length > 30) {
         alert("추가할 수 없습니다.");
       } else {
-        console.log("==========================");
-
-        console.log(this.bannerImage);
         this.bannerImage.push({ name: null, image: null });
         this.$store.commit("addBannerImage");
-        console.log(this.bannerImage);
-        console.log("==========================");
       }
     },
     deleteBannerImage() {
@@ -457,7 +454,13 @@ export default {
       this.table = newValue.tableList;
       this.image = newValue.thumbnail;
       if (newValue.banners.length != 0) {
-        this.bannerImage = newValue.banners;
+        this.bannerImage = [];
+        for (let i in newValue.banners) {
+          this.bannerImage.push({
+            name: newValue.banners[i].name,
+            image: newValue.banners[i].image,
+          });
+        }
       }
       if (newValue.detailimage.length != 0) {
         this.detailImage = [];
