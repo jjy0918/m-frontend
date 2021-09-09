@@ -25,25 +25,6 @@
         <md-input v-model="phoneNumber"></md-input>
       </md-field>
 
-      <!-- <md-field>
-        <label>비밀번호</label>
-        <md-input v-model="password" required type="password"></md-input>
-        <span class="md-helper-text"
-          >영문/숫자 조합 8자리 이상, 12자리 이하</span
-        >
-      </md-field> -->
-
-      <!-- <md-field :class="messageClass">
-        <label>비밀번호(확인)</label>
-        <md-input
-          v-model="passwordCheck"
-          required
-          type="password"
-          @keyup="ConfirmPassword"
-        ></md-input>
-        <span class="md-error">비밀번호가 일치하지 않습니다.</span>
-      </md-field> -->
-
       <div>
         <md-radio v-model="role" value="ADMIN">마스터관리자</md-radio>
         <md-radio v-model="role" value="MANAGER">일반관리자</md-radio>
@@ -237,15 +218,13 @@ export default {
     if (this.loginUserId === null) {
       alert("로그인이 필요한 서비스입니다.");
       this.$router.push(`/`);
-    } else if (this.loginUserId.role != "ADMIN") {
-      alert("권한이 없습니다.");
-      this.nowMenu = "ADMIN 권한이 필요합니다";
-    } else {
-      this.isAdmin = true;
-      this.no = this.$route.params.no;
-      this.$store.commit("clearManagerDetailInfo");
-      this.$store.dispatch("getManagerDetail", this.no);
     }
+    this.isAdmin = this.$store.state.isAdmin;
+
+    this.$store.dispatch("checkAdmin");
+    this.no = this.$route.params.no;
+    this.$store.commit("clearManagerDetailInfo");
+    this.$store.dispatch("getManagerDetail", this.no);
   },
   computed: {
     messageClass() {
@@ -261,6 +240,9 @@ export default {
     },
     newManagerDetail() {
       return this.$store.state.managerDetail;
+    },
+    newAdmin() {
+      return this.$store.state.isAdmin;
     },
   },
   watch: {
@@ -283,6 +265,9 @@ export default {
       } else {
         this.permission = [];
       }
+    },
+    newAdmin(newValue) {
+      this.isAdmin = newValue;
     },
     goManagerList() {
       this.cancelManaer();

@@ -20,6 +20,7 @@
                 <md-input v-model="password" type="password"></md-input>
               </md-field>
             </b-col>
+            <b-col sm="12"> <br /></b-col>
 
             <b-col sm="6">
               <md-button class="md-raised md-primary" @click="goUser()"

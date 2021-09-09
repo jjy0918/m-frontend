@@ -9,6 +9,8 @@ export default new Vuex.Store({
   state: {
     test: {},
     loginUserId: null,
+    isAdmin: false,
+    isManager: false,
     allManager: null,
     allManagerLog: null,
     goManagerList: false,
@@ -37,6 +39,12 @@ export default new Vuex.Store({
     logout: (state) => {
       state.loginUserId = null;
     },
+    isAdmin: (state, payload) => {
+      state.isAdmin = payload;
+    },
+    isManager: (state, payload) => {
+      state.isManager = payload;
+    },
     saveAllManager: (state, payload) => {
 
       if (payload.data.length == 0) {
@@ -47,6 +55,10 @@ export default new Vuex.Store({
 
       }
     },
+    notFountAllManager: (state) => {
+      alert("권한이 없습니다.");
+      state.allManager = { data: [{ no: "권한이 존재하지 않습니다." }] };
+    },
     saveAllManagerLog: (state, payload) => {
       if (payload.data.length == 0) {
         state.allManagerLog = { data: [{ no: "검색 결과 없음" }] };
@@ -55,6 +67,10 @@ export default new Vuex.Store({
         state.allManagerLog = payload;
 
       }
+    },
+    notFountAllManagerLog: (state) => {
+      alert("권한이 없습니다.");
+      state.allManagerLog = { data: [{ no: "권한이 존재하지 않습니다." }] };
     },
     saveProductManager: (state, payload) => {
       if (payload.data.length == 0) {
@@ -75,15 +91,14 @@ export default new Vuex.Store({
     },
     managerDetailInfo: (state, payload) => {
       state.managerDetail = payload.data;
-      if (payload.data.banners.length != 0) {
+      if (payload.data.banners && payload.data.banners.length != 0) {
         state.bannerImage = payload.data.banners;
 
       }
-      if (payload.data.detailimage.length != 0) {
+      if (payload.data.detailimage && payload.data.detailimage.length != 0) {
         state.detailImage = payload.data.detailimage;
 
       }
-
     },
     savePImage: (state, payload) => {
       state.pImage = payload.data;
@@ -226,7 +241,30 @@ export default new Vuex.Store({
         .get(`/login`)
         .then((response) => {
           store.commit("saveLoginUser", response.data);
-        });
+        })
+        .catch(() => {
+          store.commit("logout");
+        })
+    },
+    checkAdmin(store) {
+      http
+        .get(`/login/check/admin`)
+        .then(() => {
+          store.commit("isAdmin", true);
+        })
+        .catch(() => {
+          store.commit("isAdmin", false);
+        })
+    },
+    checkManager(store) {
+      http
+        .get(`/login/check/manager`)
+        .then(() => {
+          store.commit("isManager", true);
+        })
+        .catch(() => {
+          store.commit("isManager", false);
+        })
     },
     logout(store) {
       httpLogin
@@ -244,7 +282,10 @@ export default new Vuex.Store({
         .then((response) => {
           store.commit("saveAllManager", response.data);
         })
-        .catch((exp) => console.log(`항목 불러오기 실패 : ${exp}`));
+        .catch((exp) => {
+          console.log(`항목 불러오기 실패 : ${exp}`);
+          store.commit("notFountAllManager");
+        });
 
     },
     getAllManagerLog(store, payload) {
@@ -254,7 +295,10 @@ export default new Vuex.Store({
         .then((response) => {
           store.commit("saveAllManagerLog", response.data);
         })
-        .catch((exp) => console.log(`항목 불러오기 실패 : ${exp}`));
+        .catch((exp) => {
+          console.log(`항목 불러오기 실패 : ${exp}`);
+          store.commit("notFountAllManagerLog");
+        });
 
     },
     searchManager(store, payload) {
@@ -263,7 +307,10 @@ export default new Vuex.Store({
         .then((response) => {
           store.commit("saveAllManager", response.data);
         })
-        .catch((exp) => console.log(`매니저 검색 실패 : ${exp}`));
+        .catch((exp) => {
+          console.log(`매니저 검색 실패 : ${exp}`);
+          store.commit("notFountAllManager");
+        });
     },
     searchManagerLog(store, payload) {
       http
@@ -271,9 +318,12 @@ export default new Vuex.Store({
         .then((response) => {
           store.commit("saveAllManagerLog", response.data);
         })
-        .catch((exp) => console.log(`매니저 검색 실패 : ${exp}`));
-    }
-    , createManager(store, payload) {
+        .catch((exp) => {
+          console.log(`매니저 검색 실패 : ${exp}`);
+          store.commit("notFountAllManagerLog");
+        });
+    },
+    createManager(store, payload) {
       http
         .post(`/manager`, payload)
         .then(() => {
@@ -308,6 +358,8 @@ export default new Vuex.Store({
         })
         .catch((e) => {
           console.log(e);
+          alert("권한이 없습니다.");
+          store.commit("goManagerList");
         })
     },
     deleteManager(store, no) {

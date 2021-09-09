@@ -61,18 +61,39 @@ export default {
       });
     },
   },
+  computed: {
+    // 값 변경이 일어나면
+    newResultLocation() {
+      return this.$store.state.loginUserId;
+    },
+    newAdmin() {
+      return this.$store.state.isAdmin;
+    },
+  },
+  watch: {
+    // 갱신
+    newResultLocation(newValue) {
+      this.loginUserId = newValue;
+      if (this.loginUserId == null) {
+        alert("로그인이 필요한 서비스입니다.");
+        this.$router.push(`/`);
+      }
+    },
+    newAdmin(newValue) {
+      this.isAdmin = newValue;
+    },
+  },
   created() {
+    this.$store.dispatch("checkLogin");
+
     this.loginUserId = this.$store.state.loginUserId;
     if (this.loginUserId === null) {
       alert("로그인이 필요한 서비스입니다.");
-      // this.$router.push(`/`);
-    } else if (this.loginUserId.role != "ADMIN") {
-      alert("권한이 없습니다.");
-      this.nowMenu = "ADMIN 권한이 필요합니다";
-    } else {
-      this.isAdmin = true;
-      this.getAllManager();
+      this.$router.push(`/`);
     }
+    this.isAdmin = this.$store.state.isAdmin;
+
+    this.$store.dispatch("checkAdmin");
   },
 };
 </script>

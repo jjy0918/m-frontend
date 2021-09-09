@@ -199,13 +199,10 @@ export default {
     if (this.loginUserId === null) {
       alert("로그인이 필요한 서비스입니다.");
       this.$router.push(`/`);
-    } else if (this.loginUserId.role != "ADMIN") {
-      alert("권한이 없습니다.");
-      this.nowMenu = "ADMIN 권한이 필요합니다";
-    } else {
-      this.isAdmin = true;
-      this.getAllManager(1);
     }
+    this.isAdmin = this.$store.state.isAdmin;
+    this.$store.dispatch("checkAdmin");
+    this.getAllManager(1);
   },
   computed: {
     newAllManager() {
@@ -213,6 +210,9 @@ export default {
     },
     newReload() {
       return this.$store.state.reload;
+    },
+    newAdmin() {
+      return this.$store.state.isAdmin;
     },
   },
   watch: {
@@ -226,6 +226,9 @@ export default {
         this.getAllManager(1);
         this.$store.commit("reloadFalse");
       }
+    },
+    newAdmin(newValue) {
+      this.isAdmin = newValue;
     },
   },
 };

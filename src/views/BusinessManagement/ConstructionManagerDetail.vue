@@ -387,19 +387,14 @@ export default {
     if (this.loginUserId === null) {
       alert("로그인이 필요한 서비스입니다.");
       this.$router.push(`/`);
-    } else if (
-      this.loginUserId.role != "ADMIN" &&
-      this.loginUserId.role != "MANAGER"
-    ) {
-      alert("권한이 없습니다.");
-      this.nowMenu = "ADMIN or MANAGER 권한이 필요합니다";
-    } else {
-      this.isAdmin = true;
-      this.$store.commit("clearDetailImageAll");
-      this.$store.commit("clearBannerImageAll");
-      this.no = this.$route.params.no;
-      this.$store.dispatch("getConstructionManagerDetail", this.no);
     }
+    this.isAdmin = this.$store.state.isManager;
+    this.$store.dispatch("checkManager");
+
+    this.$store.commit("clearDetailImageAll");
+    this.$store.commit("clearBannerImageAll");
+    this.no = this.$route.params.no;
+    this.$store.dispatch("getConstructionManagerDetail", this.no);
   },
   computed: {
     goManagerList() {
@@ -414,10 +409,16 @@ export default {
     newManagerDetail() {
       return this.$store.state.managerDetail;
     },
+    newAdmin() {
+      return this.$store.state.isManager;
+    },
   },
   watch: {
     goManagerList() {
       this.cancelManaer();
+    },
+    newAdmin(newValue) {
+      this.isAdmin = newValue;
     },
     newParent(newValue) {
       if (newValue === "UPS&STS") {

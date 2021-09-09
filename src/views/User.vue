@@ -4,7 +4,9 @@
     <div id="about" class="container-fluid">
       <div class="row">
         <h2 class="text-center hover" @click="goMain()">EPKOREA</h2>
-
+        <br />
+        <hr />
+        <br />
         <div class="col-sm-8">
           <h2>유저 페이지</h2>
           <br />
