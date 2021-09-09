@@ -215,6 +215,8 @@ export default {
   },
   created() {
     this.loginUserId = this.$store.state.loginUserId;
+    this.$store.dispatch("checkLogin");
+
     if (this.loginUserId === null) {
       alert("로그인이 필요한 서비스입니다.");
       this.$router.push(`/`);
@@ -237,6 +239,9 @@ export default {
     },
     newAdmin() {
       return this.$store.state.isAdmin;
+    },
+    newResultLocation() {
+      return this.$store.state.loginUserId;
     },
   },
   watch: {
@@ -265,6 +270,13 @@ export default {
     },
     newAdmin(newValue) {
       this.isAdmin = newValue;
+    },
+    newResultLocation(newValue) {
+      this.loginUserId = newValue;
+      if (this.loginUserId == null) {
+        alert("로그인이 필요한 서비스입니다.");
+        this.$router.push(`/`);
+      }
     },
   },
 };

@@ -62,14 +62,26 @@ export default {
     newAdmin() {
       return this.$store.state.isManager;
     },
+    newResultLocation() {
+      return this.$store.state.loginUserId;
+    },
   },
   watch: {
     newAdmin(newValue) {
       this.isAdmin = newValue;
     },
+    newResultLocation(newValue) {
+      this.loginUserId = newValue;
+      if (this.loginUserId == null) {
+        alert("로그인이 필요한 서비스입니다.");
+        this.$router.push(`/`);
+      }
+    },
   },
   created() {
     this.loginUserId = this.$store.state.loginUserId;
+    this.$store.dispatch("checkLogin");
+
     if (this.loginUserId === null) {
       alert("로그인이 필요한 서비스입니다.");
       this.$router.push(`/`);
