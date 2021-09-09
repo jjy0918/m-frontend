@@ -1,6 +1,7 @@
 import Vue from "vue";
 import Vuex from "vuex";
 import http from "@/http-common";
+import httpLogin from "@/http-login";
 
 Vue.use(Vuex);
 
@@ -188,30 +189,12 @@ export default new Vuex.Store({
 
   },
   actions: {
-    userLogin(store, payload) {
-      http
-        .post(`/login`, payload)
-        // 데이터 저장
-        .then(function (response) {
-          alert(response.data.data.name + "님 환영합니다");
-          store.commit("saveLoginUser", response.data.data);
-        })
-        .catch((exp) => {
-          alert("아이디 혹은 비밀번호를 확인해주세요");
-          console.log(exp);
-        });
-    },
     // userLogin(store, payload) {
-    //   let frm = new FormData();
-    //   console.log("===========================");
-    //   console.log(payload);
-    //   frm.append('username', payload.id);
-    //   frm.append('password', payload.password);
+    //   httpLogin;
     //   http
-    //     .post(`/login`, frm)
+    //     .post(`/login`, payload)
     //     // 데이터 저장
     //     .then(function (response) {
-    //       console.log(response);
     //       alert(response.data.data.name + "님 환영합니다");
     //       store.commit("saveLoginUser", response.data.data);
     //     })
@@ -220,6 +203,39 @@ export default new Vuex.Store({
     //       console.log(exp);
     //     });
     // },
+    userLogin(store, payload) {
+      let frm = new FormData();
+      console.log("===========================");
+      console.log(payload);
+      frm.append('username', payload.id);
+      frm.append('password', payload.password);
+      httpLogin
+        .post(`/login`, frm)
+        // 데이터 저장
+        .then(function () {
+          alert(payload.id + "님 환영합니다.");
+          store.commit("saveLoginUser", payload.id);
+        })
+        .catch((exp) => {
+          alert("아이디 혹은 비밀번호를 확인해주세요");
+          console.log(exp);
+        });
+    },
+    checkLogin(store) {
+      http
+        .get(`/login`)
+        .then((response) => {
+          store.commit("saveLoginUser", response.data);
+        });
+    },
+    logout(store) {
+      httpLogin
+        .post(`/logout`)
+        .then(() => {
+          alert("로그아웃에 성공하였습니다.");
+          store.commit("logout");
+        });
+    },
     getAllManager(store, payload) {
 
       http

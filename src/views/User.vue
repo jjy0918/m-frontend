@@ -3,6 +3,8 @@
     <!-- Container (About Section) -->
     <div id="about" class="container-fluid">
       <div class="row">
+        <h2 class="text-center hover" @click="goMain()">EPKOREA</h2>
+
         <div class="col-sm-8">
           <h2>유저 페이지</h2>
           <br />
@@ -44,7 +46,13 @@
 </template>
 
 <script>
-export default {};
+export default {
+  methods: {
+    goMain() {
+      this.$router.push(`/`);
+    },
+  },
+};
 </script>
 
 <style>
@@ -71,5 +79,8 @@ h4 {
 .logo {
   color: #f4511e;
   font-size: 200px;
+}
+.hover {
+  cursor: pointer;
 }
 </style>

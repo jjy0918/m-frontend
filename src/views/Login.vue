@@ -1,7 +1,7 @@
 <template>
   <div class="hello">
     <b-card
-      header="EPKOREA"
+      header="EPKOREA 관리자 로그인"
       style="max-width: 40rem; margin: auto; margin-top: 10vh"
       class="mb-2"
       border-variant="info"
@@ -21,11 +21,12 @@
               </md-field>
             </b-col>
 
-            <b-col sm="10">
-              <md-radio v-model="loginType" value="MANAGER">Manger</md-radio>
-              <md-radio v-model="loginType" value="USER">User</md-radio>
+            <b-col sm="6">
+              <md-button class="md-raised md-primary" @click="goUser()"
+                >유저 페이지</md-button
+              >
             </b-col>
-            <b-col sm="2">
+            <b-col sm="6">
               <md-button class="md-raised md-primary" @click="login()"
                 >로그인</md-button
               >
@@ -36,28 +37,23 @@
             <b-col>
               <md-field>
                 <label>ID</label>
-                <md-input v-model="loginUserId.id" readonly></md-input>
-              </md-field>
-
-              <md-field>
-                <label>NAME</label>
-                <md-input v-model="loginUserId.name" readonly></md-input>
-              </md-field>
-
-              <md-field>
-                <label>ROLE</label>
-                <md-input v-model="loginUserId.role" readonly></md-input>
+                <md-input v-model="loginUserId" readonly></md-input>
               </md-field>
             </b-col>
+            <b-col sm="12"> <br /></b-col>
 
-            <b-col sm="10">
-              <md-radio v-model="loginType" value="MANAGER"
-                >Masdasdanger</md-radio
+            <b-col sm="4">
+              <md-button class="md-raised md-primary" @click="goManager()"
+                >관리자 페이지</md-button
               >
-              <md-radio v-model="loginType" value="USER">Usasder</md-radio>
             </b-col>
-            <b-col sm="2">
-              <md-button class="md-raised md-primary" @click="logout()"
+            <b-col sm="4">
+              <md-button class="md-raised md-primary" @click="goUser()"
+                >유저 페이지</md-button
+              >
+            </b-col>
+            <b-col sm="4">
+              <md-button class="md-raised md-accent" @click="logout()"
                 >로그아웃</md-button
               >
             </b-col>
@@ -94,7 +90,13 @@ export default {
       this.loginAlert = true;
     },
     logout() {
-      this.$store.commit("logout");
+      this.$store.dispatch("logout");
+    },
+    goManager() {
+      this.$router.push(`/manager/mm`);
+    },
+    goUser() {
+      this.$router.push("/user");
     },
   },
   computed: {
@@ -107,30 +109,13 @@ export default {
     // 갱신
     newResultLocation(newValue) {
       this.loginUserId = newValue;
-      if (this.loginUserId != null) {
-        if (
-          this.loginUserId.role === "MANAGER" ||
-          this.loginUserId.role === "ADMIN"
-        ) {
-          this.$session.set("user_id", this.loginUserId);
-
-          this.$router.push(`/manager/mm`);
-        } else if (this.loginUserId.role === "USER") {
-          this.$router.push(`/user`);
-        }
-      } else {
-        this.$router.push(`/`);
-      }
+      this.id = null;
+      this.password = null;
     },
   },
   created() {
-    // this.loginUserId = this.$store.state.loginUserId;
-    // this.loginUserId = this.$session.get("user_id");
-    // if(this.loginUserId!=null){
-    //       this.$router.push(`/manager/mm`);
-
-    // }
-    console.log(this.loginUserId);
+    this.$store.dispatch("checkLogin");
+    this.loginUserId = this.$store.state.loginUserId;
   },
 };
 </script>

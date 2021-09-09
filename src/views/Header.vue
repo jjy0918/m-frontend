@@ -2,7 +2,7 @@
   <div>
     <br />
     <br />
-    <h2 class="text-center">EPKOREA</h2>
+    <h2 class="text-center hover" @click="goMain()">EPKOREA</h2>
     <br />
     <md-tabs class="md-transparent" md-alignment="fixed">
       <md-tab
@@ -37,8 +37,15 @@ export default {
     moveEmpty() {
       this.$router.push(`/manager/empty`);
     },
+    goMain() {
+      this.$router.push(`/`);
+    },
   },
 };
 </script>
 
-<style lang="scss" scoped></style>
+<style>
+.hover {
+  cursor: pointer;
+}
+</style>
