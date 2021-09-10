@@ -313,6 +313,11 @@ export default {
       } else if (newValue === "RAILROAD") {
         this.categoryChild = ["RAILROAD"];
       }
+      for (let i in this.categoryChild) {
+        if (this.child === this.categoryChild[i]) {
+          return;
+        }
+      }
 
       this.child = this.categoryChild[0];
     },

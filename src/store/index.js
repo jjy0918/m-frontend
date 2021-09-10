@@ -65,7 +65,7 @@ export default new Vuex.Store({
       }
     },
     saveProductManager: (state, payload) => {
-      if (payload.data.length == 0) {
+      if (!payload.data || payload.data.length == 0) {
         state.productManager = { data: [{ no: "검색 결과 없음" }] };
       }
       else {
@@ -141,7 +141,7 @@ export default new Vuex.Store({
       state.detailImage = null;
     },
     saveConstructionManager: (state, payload) => {
-      if (payload.data.length == 0) {
+      if (!payload.data || payload.data.length == 0) {
         state.constructionManager = { data: [{ no: "검색 결과 없음" }] };
       }
       else {

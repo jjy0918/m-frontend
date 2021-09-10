@@ -451,6 +451,12 @@ export default {
         this.categoryChild = ["RAILROAD"];
       }
 
+      for (let i in this.categoryChild) {
+        if (this.child === this.categoryChild[i]) {
+          return;
+        }
+      }
+
       this.child = this.categoryChild[0];
     },
     newImageLink(newValue) {
