@@ -258,8 +258,8 @@ export default new Vuex.Store({
         .then((response) => {
           store.commit("saveAllManager", response.data);
         })
-        .catch((exp) => {
-          console.log(`항목 불러오기 실패 : ${exp}`);
+        .catch(() => {
+          alert("항목 불러오기에 실패하였습니다.");
         });
 
     },
@@ -270,8 +270,8 @@ export default new Vuex.Store({
         .then((response) => {
           store.commit("saveAllManagerLog", response.data);
         })
-        .catch((exp) => {
-          console.log(`항목 불러오기 실패 : ${exp}`);
+        .catch(() => {
+          alert("항목 불러오기에 실패하였습니다.");
         });
 
     },
@@ -301,7 +301,6 @@ export default new Vuex.Store({
         .then(() => {
           alert("정상적으로 등록되었습니다.");
           store.commit("goManagerList");
-
         })
         .catch((exp) => {
           console.log(exp);

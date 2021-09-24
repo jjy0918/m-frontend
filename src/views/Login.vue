@@ -73,6 +73,7 @@ export default {
       id: null,
       password: null,
       loginUserId: null,
+      isAdmin: false,
     };
   },
   methods: {
@@ -94,7 +95,11 @@ export default {
       this.$store.dispatch("logout");
     },
     goManager() {
-      this.$router.push(`/manager/mm`);
+      if (this.isAdmin) {
+        this.$router.push(`/manager/mm`);
+      } else {
+        this.$router.push(`/manager/bm`);
+      }
     },
     goUser() {
       this.$router.push("/user");
@@ -105,6 +110,9 @@ export default {
     newResultLocation() {
       return this.$store.state.loginUserId;
     },
+    newAdmin() {
+      return this.$store.state.isAdmin;
+    },
   },
   watch: {
     // 갱신
@@ -112,11 +120,18 @@ export default {
       this.loginUserId = newValue;
       this.id = null;
       this.password = null;
+      this.$store.dispatch("checkAdmin");
+    },
+    newAdmin(newValue) {
+      this.isAdmin = newValue;
     },
   },
   created() {
     this.$store.dispatch("checkLogin");
     this.loginUserId = this.$store.state.loginUserId;
+
+    this.isAdmin = this.$store.state.isAdmin;
+    this.$store.dispatch("checkAdmin");
   },
 };
 </script>

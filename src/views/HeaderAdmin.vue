@@ -5,14 +5,14 @@
     <h2 class="text-center hover" @click="goMain()">EPKOREA</h2>
     <br />
     <md-tabs class="md-transparent" md-alignment="fixed">
-      <!-- <md-tab
+      <md-tab
         id="tab-page"
         md-label="관리자 관리"
         @click="moveManagerManagement()"
         v-show="isAdmin"
-      ></md-tab> -->
+      ></md-tab>
       <md-tab
-        id="tab-page"
+        id="tab-home"
         md-label="사업 관리"
         @click="moveProductManagement()"
       ></md-tab>
