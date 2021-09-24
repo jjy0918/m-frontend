@@ -281,8 +281,8 @@ export default new Vuex.Store({
         .then((response) => {
           store.commit("saveAllManager", response.data);
         })
-        .catch((exp) => {
-          console.log(`매니저 검색 실패 : ${exp}`);
+        .catch(() => {
+          alert("항목 불러오기에 실패하였습니다.");
         });
     },
     searchManagerLog(store, payload) {
@@ -291,33 +291,30 @@ export default new Vuex.Store({
         .then((response) => {
           store.commit("saveAllManagerLog", response.data);
         })
-        .catch((exp) => {
-          console.log(`매니저 검색 실패 : ${exp}`);
+        .catch(() => {
+          alert("항목 불러오기에 실패하였습니다.");
         });
     },
     createManager(store, payload) {
       http
         .post(`/manager`, payload)
-        .then(() => {
-          alert("정상적으로 등록되었습니다.");
+        .then((response) => {
+          alert(response.data.message);
           store.commit("goManagerList");
         })
         .catch((exp) => {
-          console.log(exp);
-          alert("등록에 실패했습니다.");
-
+          alert(exp.response.data.message);
         })
     },
     editManager(store, payload) {
       http
         .put(`/manager/${payload.nowNo}`, payload)
-        .then(() => {
-          alert("수정에 성공하였습니다.");
+        .then((response) => {
+          alert(response.data.message);
           store.commit("goManagerList");
         })
         .catch((exp) => {
-          console.log(exp);
-          alert("수정에 실패했습니다.")
+          alert(exp.response.data.message);
         })
     },
     getManagerDetail(store, no) {
@@ -336,23 +333,21 @@ export default new Vuex.Store({
     deleteManager(store, no) {
       http
         .delete(`/manager/${no}`)
-        .then(() => {
-          alert("삭제에 성공하였습니다.");
+        .then((response) => {
+          alert(response.data.message);
           store.commit("goManagerList");
         })
         .catch((exp) => {
-          console.log(exp);
-          alert("삭제에 실패하였습니다.");
+          alert(exp.response.data.message);
         })
     },
     getAllProductManager(store, payload) {
       http
         .get(`/productmanagement?page=${payload}`)
-        // 데이터 저장
         .then((response) => {
           store.commit("saveProductManager", response.data);
         })
-        .catch((exp) => console.log(`항목 불러오기 실패 : ${exp}`));
+        .catch(() => alert("항목 불러오기에 실패하였습니다."));
 
     },
     searchProductManager(store, payload) {
@@ -361,7 +356,7 @@ export default new Vuex.Store({
         .then((response) => {
           store.commit("saveProductManager", response.data);
         })
-        .catch((exp) => console.log(`매니저 검색 실패 : ${exp}`));
+        .catch(() => alert("항목 불러오기에 실패하였습니다."));
     },
     savePImage(store, payload) {
       http
@@ -390,14 +385,13 @@ export default new Vuex.Store({
     createProduct(store, payload) {
       http
         .post(`/productmanagement`, payload)
-        .then(() => {
-          alert("정상적으로 등록되었습니다.");
+        .then((response) => {
+          alert(response.data.message);
           store.commit("goManagerList");
 
         })
         .catch((exp) => {
-          console.log(exp);
-          alert("등록에 실패했습니다.");
+          alert(exp.response.data.message);
 
         })
     },
@@ -415,29 +409,26 @@ export default new Vuex.Store({
     editProduct(store, payload) {
       http
         .put(`/productmanagement/${payload.no}`, payload.data)
-        .then(() => {
-          alert("정상적으로 수정되었습니다.");
+        .then((response) => {
+          alert(response.data.message);
           store.commit("goManagerList");
 
         })
         .catch((exp) => {
-          console.log(exp);
-          alert("수정에 실패했습니다.");
+          alert(exp.response.data.message);
 
         })
     },
     deleteManaer(store, payload) {
       http
         .delete(`/productmanagement/${payload}`)
-        .then(() => {
-          alert("정상적으로 삭제되었습니다.");
+        .then((response) => {
+          alert(response.data.message);
           store.commit("goManagerList");
 
         })
         .catch((exp) => {
-          console.log(exp);
-          alert("삭제에 실패했습니다.");
-
+          alert(exp.response.data.message);
         })
     },
     getAllConstructionManager(store, payload) {
@@ -493,14 +484,13 @@ export default new Vuex.Store({
     createConstruction(store, payload) {
       http
         .post(`/construction`, payload)
-        .then(() => {
-          alert("정상적으로 등록되었습니다.");
+        .then((response) => {
+          alert(response.data.message);
           store.commit("goManagerList");
 
         })
         .catch((exp) => {
-          console.log(exp);
-          alert("등록에 실패했습니다.");
+          alert(exp.response.data.message);
 
         })
     },
@@ -518,28 +508,26 @@ export default new Vuex.Store({
     deleteConstruction(store, no) {
       http
         .delete(`/construction/${no}`)
-        .then(() => {
-          alert("정상적으로 삭제되었습니다.");
+        .then((response) => {
+          alert(response.data.message);
           store.commit("goManagerList");
 
         })
         .catch((exp) => {
-          console.log(exp);
-          alert("삭제에 실패했습니다.");
+          alert(exp.response.data.message);
 
         })
     },
     editConstruction(store, payload) {
       http
         .put(`/construction/${payload.no}`, payload.data)
-        .then(() => {
-          alert("정상적으로 수정되었습니다.");
+        .then((response) => {
+          alert(response.data.message);
           store.commit("goManagerList");
 
         })
         .catch((exp) => {
-          console.log(exp);
-          alert("등록에 실패했습니다.");
+          alert(exp.response.data.message);
 
         })
     },
