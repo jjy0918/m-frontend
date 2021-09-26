@@ -192,15 +192,15 @@ export default {
   },
   created() {
     this.loginUserId = this.$store.state.loginUserId;
-    this.$store.dispatch("checkLogin");
+    this.isAdmin = this.$store.state.isAdmin;
+
+    this.$store.dispatch("checkAdmin");
 
     if (this.loginUserId === null) {
       alert("로그인이 필요한 서비스입니다.");
       this.$router.push(`/`);
     }
-    this.isAdmin = this.$store.state.isAdmin;
 
-    this.$store.dispatch("checkAdmin");
     this.getAllManagerLog(1);
   },
   computed: {
@@ -243,5 +243,4 @@ export default {
 };
 </script>
 
-<style>
-</style>
+<style></style>

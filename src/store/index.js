@@ -21,7 +21,7 @@ export default new Vuex.Store({
     constructionManager: null,
     detailImage: null,
     bannerImage: null,
-    reload: false
+    reload: false,
   },
   mutations: {
     saveTest: (state, payload) => {
@@ -46,32 +46,25 @@ export default new Vuex.Store({
       state.isManager = payload;
     },
     saveAllManager: (state, payload) => {
-
       if (payload.data.length == 0) {
         state.allManager = { data: [{ no: "검색 결과 없음" }] };
-      }
-      else {
+      } else {
         state.allManager = payload;
-
       }
     },
     saveAllManagerLog: (state, payload) => {
       if (payload.data.length == 0) {
         state.allManagerLog = { data: [{ no: "검색 결과 없음" }] };
-      }
-      else {
+      } else {
         state.allManagerLog = payload;
-
       }
     },
     saveProductManager: (state, payload) => {
       if (!payload.data || payload.data.length == 0) {
         state.productManager = { data: [{ no: "검색 결과 없음" }] };
-      }
-      else {
+      } else {
         state.productManager = payload;
         console.log(state.productManager);
-
       }
     },
     goManagerList: (state) => {
@@ -85,11 +78,9 @@ export default new Vuex.Store({
       state.managerDetail = payload.data;
       if (payload.data.banners && payload.data.banners.length != 0) {
         state.bannerImage = payload.data.banners;
-
       }
       if (payload.data.detailimage && payload.data.detailimage.length != 0) {
         state.detailImage = payload.data.detailimage;
-
       }
     },
     savePImage: (state, payload) => {
@@ -143,10 +134,8 @@ export default new Vuex.Store({
     saveConstructionManager: (state, payload) => {
       if (!payload.data || payload.data.length == 0) {
         state.constructionManager = { data: [{ no: "검색 결과 없음" }] };
-      }
-      else {
+      } else {
         state.constructionManager = payload;
-
       }
     },
     saveBannerImage: (state, payload) => {
@@ -171,7 +160,7 @@ export default new Vuex.Store({
       } else {
         state.bannerImage.push(null);
       }
-      console.log("1212 : " + state.bannerImage.length)
+      console.log("1212 : " + state.bannerImage.length);
     },
     deleteBannerImage: (state) => {
       if (!state.bannerImage || state.bannerImage.length <= 0) {
@@ -192,18 +181,17 @@ export default new Vuex.Store({
       }
 
       state.pImage = payload.thumbnail;
-    }
-
+    },
   },
   actions: {
     userLogin(store, payload) {
       let frm = new FormData();
-      frm.append('username', payload.id);
-      frm.append('password', payload.password);
+      frm.append("username", payload.id);
+      frm.append("password", payload.password);
       httpLogin
         .post(`/login`, frm)
         // 데이터 저장
-        .then(function () {
+        .then(function() {
           alert(payload.id + "님 환영합니다.");
           store.commit("saveLoginUser", payload.id);
         })
@@ -220,38 +208,53 @@ export default new Vuex.Store({
         })
         .catch(() => {
           store.commit("logout");
-        })
+        });
     },
     checkAdmin(store) {
       http
         .get(`/login/check/admin`)
-        .then(() => {
+        .then((response) => {
+          store.commit("saveLoginUser", response.data);
           store.commit("isAdmin", true);
         })
-        .catch(() => {
-          store.commit("isAdmin", false);
-        })
+        .catch((exp) => {
+          // 401 => 인가 안됨 => 로그아웃 처리
+          if (exp.response.status == 401) {
+            store.commit("logout");
+          }
+
+          // 403 => 인가되었지만, 인증 안됨 => 권한 없음 알려주기
+          else if (exp.response.status == 403) {
+            store.commit("isAdmin", false);
+          }
+        });
     },
     checkManager(store) {
       http
         .get(`/login/check/manager`)
-        .then(() => {
+        .then((response) => {
+          store.commit("saveLoginUser", response.data);
           store.commit("isManager", true);
         })
-        .catch(() => {
-          store.commit("isManager", false);
-        })
-    },
-    logout(store) {
-      httpLogin
-        .post(`/logout`)
-        .then(() => {
-          alert("로그아웃에 성공하였습니다.");
-          store.commit("logout");
+        .catch((exp) => {
+          // 401 => 인가 안됨 => 로그아웃 처리
+          if (exp.response.status == 401) {
+            store.commit("logout");
+          }
+
+          // 403 => 인가되었지만, 인증 안됨 => 권한 없음 알려주기
+          else if (exp.response.status == 403) {
+            store.commit("isManager", false);
+          }
         });
     },
+    logout(store) {
+      httpLogin.post(`/logout`).then(() => {
+        alert("로그아웃에 성공하였습니다.");
+        store.commit("logout");
+      });
+    },
     getAllManager(store, payload) {
-
       http
         .get(`/manager?page=${payload}`)
         // 데이터 저장
@@ -261,7 +264,6 @@ export default new Vuex.Store({
         .catch(() => {
           alert("항목 불러오기에 실패하였습니다.");
         });
-
     },
     getAllManagerLog(store, payload) {
       http
@@ -273,11 +275,12 @@ export default new Vuex.Store({
         .catch(() => {
           alert("항목 불러오기에 실패하였습니다.");
         });
-
     },
     searchManager(store, payload) {
       http
-        .get(`/manager/search/${payload.type}?word=${payload.word}&page=${payload.page}`)
+        .get(
+          `/manager/search/${payload.type}?word=${payload.word}&page=${payload.page}`
+        )
         .then((response) => {
           store.commit("saveAllManager", response.data);
         })
@@ -287,7 +290,9 @@ export default new Vuex.Store({
     },
     searchManagerLog(store, payload) {
       http
-        .get(`/managerlog/search/${payload.type}?word=${payload.word}&page=${payload.page}`)
+        .get(
+          `/managerlog/search/${payload.type}?word=${payload.word}&page=${payload.page}`
+        )
         .then((response) => {
           store.commit("saveAllManagerLog", response.data);
         })
@@ -304,7 +309,7 @@ export default new Vuex.Store({
         })
         .catch((exp) => {
           alert(exp.response.data.message);
-        })
+        });
     },
     editManager(store, payload) {
       http
@@ -315,7 +320,7 @@ export default new Vuex.Store({
         })
         .catch((exp) => {
           alert(exp.response.data.message);
-        })
+        });
     },
     getManagerDetail(store, no) {
       http
@@ -328,7 +333,7 @@ export default new Vuex.Store({
           console.log(e);
           alert("권한이 없습니다.");
           store.commit("goManagerList");
-        })
+        });
     },
     deleteManager(store, no) {
       http
@@ -339,7 +344,7 @@ export default new Vuex.Store({
         })
         .catch((exp) => {
           alert(exp.response.data.message);
-        })
+        });
     },
     getAllProductManager(store, payload) {
       http
@@ -348,11 +353,12 @@ export default new Vuex.Store({
           store.commit("saveProductManager", response.data);
         })
         .catch(() => alert("항목 불러오기에 실패하였습니다."));
-
     },
     searchProductManager(store, payload) {
       http
-        .get(`/productmanagement/search/${payload.type}?word=${payload.word}&page=${payload.page}`)
+        .get(
+          `/productmanagement/search/${payload.type}?word=${payload.word}&page=${payload.page}`
+        )
         .then((response) => {
           store.commit("saveProductManager", response.data);
         })
@@ -360,27 +366,31 @@ export default new Vuex.Store({
     },
     savePImage(store, payload) {
       http
-        .post(`/save`, payload, {
+        .post(`/save/image`, payload, {
           headers: {
-            'Content-Type': "multipart/form-data"
-          }
+            "Content-Type": "multipart/form-data",
+          },
         })
         .then((response) => {
           store.commit("savePImage", response.data);
         })
-        .catch((exp) => console.log(`이미지 등록 실패 : ${exp}`));
+        .catch((exp) => {
+          alert(exp.response.data.message);
+        });
     },
     savePPdf(store, payload) {
       http
-        .post(`/save`, payload, {
+        .post(`/save/pdf`, payload, {
           headers: {
-            'Content-Type': "multipart/form-data"
-          }
+            "Content-Type": "multipart/form-data",
+          },
         })
         .then((response) => {
           store.commit("savePPdf", response.data);
         })
-        .catch((exp) => console.log(`이미지 등록 실패 : ${exp}`));
+        .catch((exp) => {
+          alert(exp.response.data.message);
+        });
     },
     createProduct(store, payload) {
       http
@@ -388,12 +398,10 @@ export default new Vuex.Store({
         .then((response) => {
           alert(response.data.message);
           store.commit("goManagerList");
-
         })
         .catch((exp) => {
           alert(exp.response.data.message);
-
-        })
+        });
     },
     getProductManagerDetail(store, no) {
       http
@@ -404,7 +412,7 @@ export default new Vuex.Store({
         })
         .catch((e) => {
           console.log(e);
-        })
+        });
     },
     editProduct(store, payload) {
       http
@@ -412,12 +420,10 @@ export default new Vuex.Store({
         .then((response) => {
           alert(response.data.message);
           store.commit("goManagerList");
-
         })
         .catch((exp) => {
           alert(exp.response.data.message);
-
-        })
+        });
     },
     deleteManaer(store, payload) {
       http
@@ -425,11 +431,10 @@ export default new Vuex.Store({
         .then((response) => {
           alert(response.data.message);
           store.commit("goManagerList");
-
         })
         .catch((exp) => {
           alert(exp.response.data.message);
-        })
+        });
     },
     getAllConstructionManager(store, payload) {
       http
@@ -439,11 +444,12 @@ export default new Vuex.Store({
           store.commit("saveConstructionManager", response.data);
         })
         .catch((exp) => console.log(`항목 불러오기 실패 : ${exp}`));
-
     },
     searchConstructionManager(store, payload) {
       http
-        .get(`/construction/search/name?word=${payload.word}&page=${payload.page}`)
+        .get(
+          `/construction/search/name?word=${payload.word}&page=${payload.page}`
+        )
         .then((response) => {
           store.commit("saveConstructionManager", response.data);
         })
@@ -451,35 +457,39 @@ export default new Vuex.Store({
     },
     saveDetailImage(store, payload) {
       http
-        .post(`/save`, payload.data, {
+        .post(`/save/image`, payload.data, {
           headers: {
-            'Content-Type': "multipart/form-data"
-          }
+            "Content-Type": "multipart/form-data",
+          },
         })
         .then((response) => {
           let rp = {
             data: response.data,
-            index: payload.index
-          }
+            index: payload.index,
+          };
           store.commit("saveDetailImage", rp);
         })
-        .catch((exp) => console.log(`이미지 등록 실패 : ${exp}`));
+        .catch((exp) => {
+          alert(exp.response.data.message);
+        });
     },
     saveBannerImage(store, payload) {
       http
-        .post(`/save`, payload.data, {
+        .post(`/save/image`, payload.data, {
           headers: {
-            'Content-Type': "multipart/form-data"
-          }
+            "Content-Type": "multipart/form-data",
+          },
         })
         .then((response) => {
           let rp = {
             data: response.data,
-            index: payload.index
-          }
+            index: payload.index,
+          };
           store.commit("saveBannerImage", rp);
         })
-        .catch((exp) => console.log(`이미지 등록 실패 : ${exp}`));
+        .catch((exp) => {
+          alert(exp.response.data.message);
+        });
     },
     createConstruction(store, payload) {
       http
@@ -487,12 +497,10 @@ export default new Vuex.Store({
         .then((response) => {
           alert(response.data.message);
           store.commit("goManagerList");
-
         })
         .catch((exp) => {
           alert(exp.response.data.message);
-
-        })
+        });
     },
     getConstructionManagerDetail(store, no) {
       http
@@ -503,7 +511,7 @@ export default new Vuex.Store({
         })
         .catch((e) => {
           console.log(e);
-        })
+        });
     },
     deleteConstruction(store, no) {
       http
@@ -511,12 +519,10 @@ export default new Vuex.Store({
         .then((response) => {
           alert(response.data.message);
           store.commit("goManagerList");
-
         })
         .catch((exp) => {
           alert(exp.response.data.message);
-
-        })
+        });
     },
     editConstruction(store, payload) {
       http
@@ -524,12 +530,10 @@ export default new Vuex.Store({
         .then((response) => {
           alert(response.data.message);
           store.commit("goManagerList");
-
         })
         .catch((exp) => {
           alert(exp.response.data.message);
-
-        })
+        });
     },
   },
 });

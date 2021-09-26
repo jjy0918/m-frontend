@@ -213,14 +213,14 @@ export default {
   },
   created() {
     this.loginUserId = this.$store.state.loginUserId;
-    this.$store.dispatch("checkLogin");
+    this.isAdmin = this.$store.state.isManager;
+
+    this.$store.dispatch("checkManager");
 
     if (this.loginUserId === null) {
       alert("로그인이 필요한 서비스입니다.");
       this.$router.push(`/`);
     }
-    this.isAdmin = this.$store.state.isManager;
-    this.$store.dispatch("checkManager");
     this.getAllConstruction(1);
   },
   computed: {
